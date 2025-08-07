@@ -1,4 +1,4 @@
-
+import Image from 'next/image';
 
 export default function AboutSection() {
   return (
@@ -21,10 +21,12 @@ export default function AboutSection() {
             <div className="relative mx-auto w-64 h-80">
               <div className="absolute -inset-2 bg-gradient-to-br from-caribbean-teal/15 to-brand/15 rounded-2xl transform rotate-1"></div>
               <div className="relative w-full h-full rounded-xl overflow-hidden shadow-lg bg-white border-2 border-white">
-                <img
+                <Image
                   src="/images/andrew-cave-professional.jpg"
                   alt="Andrew Cave - Licensed Insurance Broker"
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
+                  priority
                 />
               </div>
               {/* Trust Badge */}
