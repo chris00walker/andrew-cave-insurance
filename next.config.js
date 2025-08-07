@@ -8,9 +8,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Manual basePath for GitHub Pages - assetPrefix requires trailing slash
-  basePath: '/andrew-cave-insurance',
-  assetPrefix: '/andrew-cave-insurance/',
+  // Let GitHub Actions configure basePath automatically
 }
 
 module.exports = nextConfig
