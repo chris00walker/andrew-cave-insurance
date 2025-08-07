@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { getAllPosts } from '@/lib/posts';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { getImagePath } from '@/lib/image-path';
 
 // Blog post images mapping
 const blogImages: { [key: string]: { src: string; alt: string; hasImage: boolean } } = {
@@ -66,7 +67,7 @@ export default async function BlogPage() {
                   <div className="relative aspect-[16/9] w-full overflow-hidden rounded-t-xl bg-gradient-to-br from-neutral-warm to-gray-100">
                     {imageData.hasImage ? (
                       <Image
-                        src={imageData.src}
+                        src={getImagePath(imageData.src.startsWith('/') ? imageData.src.slice(1) : imageData.src)}
                         alt={imageData.alt}
                         fill
                         className="object-cover object-[center_20%] transition-transform duration-300 group-hover:scale-105"

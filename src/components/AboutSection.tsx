@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { getImagePath } from '@/lib/image-path';
 
 export default function AboutSection() {
   return (
@@ -22,7 +23,7 @@ export default function AboutSection() {
               <div className="absolute -inset-2 bg-gradient-to-br from-caribbean-teal/15 to-brand/15 rounded-2xl transform rotate-1"></div>
               <div className="relative w-full h-full rounded-xl overflow-hidden shadow-lg bg-white border-2 border-white">
                 <Image
-                  src="/images/andrew-cave-professional.jpg"
+                  src={getImagePath('images/andrew-cave-professional.jpg')}
                   alt="Andrew Cave - Licensed Insurance Broker"
                   fill
                   className="object-cover"
