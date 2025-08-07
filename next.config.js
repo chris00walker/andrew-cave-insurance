@@ -8,9 +8,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Manual basePath for GitHub Pages
-  basePath: process.env.NODE_ENV === 'production' ? '/andrew-cave-insurance' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/andrew-cave-insurance/' : '',
+  // Manual basePath for GitHub Pages - assetPrefix requires trailing slash
+  basePath: '/andrew-cave-insurance',
+  assetPrefix: '/andrew-cave-insurance/',
 }
 
 module.exports = nextConfig
