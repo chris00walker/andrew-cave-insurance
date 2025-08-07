@@ -8,9 +8,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // GitHub Pages serves from a subdirectory, so we need to set the base path
-  basePath: process.env.NODE_ENV === 'production' ? '/andrew-cave-insurance' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/andrew-cave-insurance/' : '',
+  // Remove base path for GitHub Pages - use root domain
+  basePath: '',
+  assetPrefix: '',
 }
 
 module.exports = nextConfig
