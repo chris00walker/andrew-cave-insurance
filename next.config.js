@@ -8,9 +8,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Remove base path for GitHub Pages - use root domain
-  basePath: '',
-  assetPrefix: '',
+  // Let GitHub Actions configure basePath automatically
 }
 
 module.exports = nextConfig

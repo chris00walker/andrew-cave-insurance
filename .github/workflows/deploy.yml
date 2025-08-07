@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy Next.js site to Pages
 
 on:
   push:
@@ -21,20 +21,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: "20"
+          cache: npm
+          
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        with:
+          static_site_generator: next
           
       - name: Install dependencies
         run: npm ci
         
-      - name: Build project
-        run: npm run build
-        
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+      - name: Build with Next.js
+        run: npx --no-install next build
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
