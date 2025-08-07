@@ -8,7 +8,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Let GitHub Actions configure basePath automatically
+  // Manual basePath for GitHub Pages
+  basePath: process.env.NODE_ENV === 'production' ? '/andrew-cave-insurance' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/andrew-cave-insurance/' : '',
 }
 
 module.exports = nextConfig
