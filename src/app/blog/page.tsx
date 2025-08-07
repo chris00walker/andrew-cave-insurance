@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { getAllPosts } from '@/lib/posts';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -65,12 +64,10 @@ export default async function BlogPage() {
                   {/* Image */}
                   <div className="relative aspect-[16/9] w-full overflow-hidden rounded-t-xl bg-gradient-to-br from-neutral-warm to-gray-100">
                     {imageData.hasImage ? (
-                      <Image
+                      <img
                         src={imageData.src}
                         alt={imageData.alt}
-                        fill
-                        className="object-cover object-[center_20%] transition-transform duration-300 group-hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="w-full h-full object-cover object-[center_20%] transition-transform duration-300 group-hover:scale-105"
                       />
                     ) : (
                       <>
