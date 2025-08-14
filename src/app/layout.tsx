@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
+import { ToastProvider } from '@/components/ui/toast-provider';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 // Trust-Building Authority Font (Serif)
 const playfairDisplay = Playfair_Display({
@@ -33,7 +35,11 @@ export default function RootLayout({
       <body
         className={`${playfairDisplay.variable} ${sourceSans3.variable} font-sans antialiased`}
       >
-        {children}
+        <TooltipProvider>
+          <ToastProvider>
+            {children}
+          </ToastProvider>
+        </TooltipProvider>
       </body>
     </html>
   );
