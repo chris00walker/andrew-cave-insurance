@@ -74,7 +74,7 @@ export default function ContactForm() {
           </h2>
           <p className="font-professional text-body md:text-body-large text-text-professional max-w-3xl mx-auto leading-relaxed">
             Take the first step toward comprehensive protection. Andrew Cave will personally review your needs and recommend 
-            <span className="text-wealth-gold font-semibold">tailored insurance solutions</span> that fit your budget and goals.
+            <span className="text-wealth-gold font-semibold"> tailored insurance solutions</span> that fit your budget and goals.
           </p>
           
           {/* Trust Indicators */}

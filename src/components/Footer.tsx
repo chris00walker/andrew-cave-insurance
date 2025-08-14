@@ -9,7 +9,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <h3 className="text-xl font-bold text-white mb-4">Andrew Cave Insurance</h3>
             <p className="text-gray-300 mb-4 max-w-md">
-              Licensed Independent Insurance Broker providing comprehensive coverage solutions for individuals and businesses across Barbados.
+              Licensed Independent Insurance Agent providing comprehensive coverage solutions for individuals and businesses across Barbados.
             </p>
             <div className="text-sm text-gray-400">
               <p>Guardian Group Office</p>

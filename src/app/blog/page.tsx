@@ -8,17 +8,17 @@ import { getImagePath } from '@/lib/image-path';
 // Blog post images mapping
 const blogImages: { [key: string]: { src: string; alt: string; hasImage: boolean } } = {
   '2025-08-06-succession-planning-101': {
-    src: '/images/succession_planning.png',
+    src: '/images/blog/succession_planning.png',
     alt: 'Business succession planning meeting',
     hasImage: true
   },
   '2025-08-05-small-business-insurance-guide': {
-    src: '/images/small_business_insurance.png',
+    src: '/images/blog/small_business_insurance.png',
     alt: 'Small business owner reviewing insurance documents',
     hasImage: true
   },
   '2025-08-04-life-insurance-myths': {
-    src: '/images/life_insurance_myths.png',
+    src: '/images/blog/life_insurance_myths.png',
     alt: 'Family protection and life insurance concept',
     hasImage: true
   }

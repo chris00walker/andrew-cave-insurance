@@ -5,7 +5,7 @@ export default function Hero() {
         {/* Trust Badge */}
         <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-8 border border-white/20">
           <div className="w-2 h-2 bg-caribbean-teal rounded-full mr-2 animate-pulse"></div>
-          <span className="text-neutral-warm font-professional text-fine font-medium">Licensed Insurance Broker • Barbados</span>
+          <span className="text-neutral-warm font-professional text-fine font-medium">Licensed Insurance Agent • Barbados</span>
         </div>
         
         {/* Main Headline - Clean and Impactful */}

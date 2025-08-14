@@ -11,7 +11,7 @@ export default function AboutSection() {
             Meet Andrew Cave
           </h2>
           <p className="font-professional text-lg text-professional-gray">
-            Licensed Independent Insurance Broker • 15+ Years Protecting Barbadian Families
+            Licensed Insurance Agent • 21+ Years Protecting Barbadian Families
           </p>
         </div>
         
@@ -33,7 +33,7 @@ export default function AboutSection() {
               {/* Trust Badge */}
               <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2">
                 <div className="bg-caribbean-teal text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
-                  Licensed Broker
+                  Licensed Agent
                 </div>
               </div>
             </div>
@@ -46,7 +46,7 @@ export default function AboutSection() {
                   <div className="w-4 h-4 bg-caribbean-teal rounded-sm flex items-center justify-center flex-shrink-0">
                     <span className="text-white text-xs font-bold">✓</span>
                   </div>
-                  <span className="text-authority-black font-medium">Licensed Independent Broker</span>
+                  <span className="text-authority-black font-medium">Licensed Independent Agent</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="w-4 h-4 bg-caribbean-teal rounded-sm flex items-center justify-center flex-shrink-0">
@@ -78,7 +78,7 @@ export default function AboutSection() {
                 Your Independent Insurance Advocate
               </h3>
               <p className="font-professional text-authority-black leading-relaxed">
-                Andrew Cave works exclusively for <strong>you</strong> - not insurance companies. With over 15 years of experience, he provides unbiased advice to help Barbadian families find the right protection at the best value.
+                Andrew Cave works exclusively for <strong>you</strong> - not insurance companies. With over 21 years of experience, he provides unbiased advice to help Barbadian families find the right protection at the best value.
               </p>
             </div>
             
