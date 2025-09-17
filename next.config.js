@@ -36,12 +36,11 @@ if (!fs.existsSync('./src/lib')) {
 // Create a custom image loader for static exports
 fs.writeFileSync(
   './src/lib/image-loader.js',
-  `// Custom image loader for static exports
-  module.exports = function({ src, width, quality }) {
-    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-    return '${basePath}${src}';
-  };
-  `
+  '// Custom image loader for static exports\n' +
+  'module.exports = function({ src, width, quality }) {\n' +
+  '  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";\n' +
+  '  return basePath + src;\n' +
+  '};'
 );
 
 module.exports = nextConfig;
