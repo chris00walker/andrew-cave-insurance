@@ -4,29 +4,27 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  NPM_FLAGS = "--legacy-peer-deps"
   NEXT_TELEMETRY_DISABLED = "1"
 
-# Redirects for SPA behavior
+# SPA fallback for client-side routing
 [[redirects]]
   from = "/*"
-  to = "/index.html"
-  status = 200
+  to = "/404.html"
+  status = 404
 
-# Cache settings
+# Cache static assets
 [[headers]]
-  for = "/*"
+  for = "/images/*"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, must-revalidate"
+    Cache-Control = "public, max-age=31536000, immutable"
 
-# Enable pretty URLs by default
-[[redirects]]
-  from = "/blog/*"
-  to = "/blog/:splat"
-  status = 200
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
 
-# Handle image paths
-[[redirects]]
-  from = "/images/*"
-  to = "/images/:splat"
-  status = 200
+# Cache HTML files with shorter duration
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
