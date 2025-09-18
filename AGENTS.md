@@ -1,5 +1,30 @@
 # AGENTS.md - Development Guidelines & Configuration
 
+---
+
+## 🤝 **Tool Integration**
+
+### **Codex CLI**
+
+- Role: Tactical agent for file edits, scaffolding, and test generation.
+- Approval Policy:
+  - Auto-approve edits under 30 lines in `.ts`/`.tsx`.
+  - Ask before editing configs (`netlify.toml`, `next.config.js`, `supabase/config.toml`).
+  - Ask before creating/deleting files or running shell commands.
+
+### **Windsurf IDE**
+
+- Role: Strategic agent for planning, reviews, and orchestration.
+- Reads workflows from `.windsurf/workflows` and guardrails from `.windsurf/rules`.
+- Primary responsibilities: multi-step tasks, code reviews, CI/CD automation, compliance checks.
+
+### **Collaboration Rules**
+
+- Git commits are the source of truth.
+- Codex commits → Windsurf reviews diffs and suggests improvements.
+- Windsurf workflows may call Codex for tactical edits.
+- Both agents follow the standards in this file.
+
 ## 🎯 **Project Overview**
 
 **Andrew Cave Insurance** - Professional insurance brokerage website with integrated questionnaire system
