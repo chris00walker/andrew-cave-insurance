@@ -1,8 +1,8 @@
 'use client';
 
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
@@ -244,9 +244,11 @@ export function CoverageHelpPopover({ coverageType }: { coverageType: string }) 
           </div>
           <Separator />
           <div className="flex gap-2">
-            <Button size="sm" className="flex-1">
-              <FileText className="w-3 h-3 mr-1" />
-              Get Quote
+            <Button asChild size="sm" className="flex-1">
+              <Link href="/questionnaire">
+                <FileText className="w-3 h-3 mr-1" />
+                Get Quote
+              </Link>
             </Button>
             <Button variant="outline" size="sm" className="flex-1">
               <Phone className="w-3 h-3 mr-1" />

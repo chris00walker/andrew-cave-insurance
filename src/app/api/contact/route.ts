@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { clientService, communicationService } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,11 +14,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Construct full name for display/storage
+    // Save to Supabase database
+    const client = await clientService.createFromContactForm(body);
+    
+    if (!client) {
+      return NextResponse.json(
+        { error: 'Failed to save client information' },
+        { status: 500 }
+      );
+    }
+
+    // Log the initial contact
+    await communicationService.log({
+      client_id: client.id,
+      communication_type: 'email',
+      direction: 'inbound',
+      subject: `New Contact Form Submission - ${insuranceType}`,
+      content: `Contact form submission from ${firstName} ${lastName}. Interest: ${insuranceType}. Additional info: ${additionalInfo || 'None provided'}`,
+      status: 'completed'
+    });
+
+    // Construct full name for webhook
     const fullName = `${firstName} ${lastName}${suffix ? ` ${suffix}` : ''}`;
 
-    // Prepare the data for webhook
+    // Prepare the data for webhook (keeping existing webhook functionality)
     const webhookData = {
+      clientId: client.id, // Include the database ID
       firstName,
       lastName,
       suffix: suffix || '',
@@ -33,29 +55,34 @@ export async function POST(request: NextRequest) {
       source: 'Andrew Cave Insurance Website'
     };
 
-    // Send to webhook (HubSpot, Zapier, etc.)
+    // Send to webhook (HubSpot, Zapier, etc.) - keeping existing functionality
     const webhookUrl = process.env.CONTACT_WEBHOOK_URL;
     
     if (webhookUrl) {
-      const webhookResponse = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(webhookData),
-      });
+      try {
+        const webhookResponse = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(webhookData),
+        });
 
-      if (!webhookResponse.ok) {
-        console.error('Webhook failed:', webhookResponse.statusText);
+        if (!webhookResponse.ok) {
+          console.error('Webhook failed:', webhookResponse.statusText);
+          // Continue anyway - don't fail the user request
+        }
+      } catch (webhookError) {
+        console.error('Webhook error:', webhookError);
         // Continue anyway - don't fail the user request
       }
     }
 
-    // You could also send an email notification here
-    // or save to a database if needed
-
     return NextResponse.json(
-      { message: 'Contact form submitted successfully' },
+      { 
+        message: 'Contact form submitted successfully',
+        clientId: client.id 
+      },
       { status: 200 }
     );
 

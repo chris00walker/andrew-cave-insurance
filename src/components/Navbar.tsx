@@ -12,7 +12,6 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import {
   Sheet,
@@ -141,7 +140,7 @@ export default function Navbar() {
           </NavigationMenu>
           
           <Button asChild variant="secondary" className="bg-caribbean-teal hover:bg-caribbean-teal/90 text-white">
-            <Link href="/#contact">Get Quote</Link>
+            <Link href="/questionnaire">Get Quote</Link>
           </Button>
         </div>
         
@@ -217,7 +216,7 @@ export default function Navbar() {
               
               <SheetClose asChild>
                 <Button asChild className="w-full bg-caribbean-teal hover:bg-caribbean-teal/90 text-white">
-                  <Link href="/#contact">Get Quote</Link>
+                  <Link href="/questionnaire">Get Quote</Link>
                 </Button>
               </SheetClose>
             </div>
