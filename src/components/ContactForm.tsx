@@ -68,27 +68,135 @@ export default function ContactForm() {
     setIsSubmitting(true);
     setSubmitStatus('idle');
     
+    // Enhanced error logging
+    const logError = (stage: string, error: any) => {
+      console.error(`Contact Form Error [${stage}]:`, {
+        error: error.message || error,
+        stack: error.stack,
+        values: { ...values, email: values.email ? '[REDACTED]' : 'missing' },
+        timestamp: new Date().toISOString(),
+        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
+        url: typeof window !== 'undefined' ? window.location.href : 'unknown'
+      });
+    };
+    
     try {
-      // Import Supabase client dynamically to avoid SSR issues
-      const { clientService, communicationService } = await import('@/lib/supabase');
-      
-      // Save to Supabase database directly
-      const client = await clientService.createFromContactForm(values);
-      
-      if (!client) {
-        throw new Error('Failed to save client information');
+      // Pre-flight checks
+      if (typeof window === 'undefined') {
+        throw new Error('Form submission not available during server-side rendering');
       }
 
-      // Log the initial contact
-      await communicationService.log({
-        client_id: client.id,
-        communication_type: 'email',
-        direction: 'inbound',
-        subject: `New Contact Form Submission - ${values.insuranceType}`,
-        content: `Contact form submission from ${values.firstName} ${values.lastName}. Interest: ${values.insuranceType}. Additional info: ${values.additionalInfo || 'None provided'}`,
-        status: 'completed'
-      });
+      // Validate environment variables
+      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        logError('Environment', new Error('Supabase configuration missing'));
+        throw new Error('Service configuration error. Please try again later.');
+      }
 
+      console.log('Starting form submission...', { timestamp: new Date().toISOString() });
+
+      // Import Supabase services with timeout
+      let clientService, communicationService;
+      try {
+        const importPromise = import('@/lib/supabase');
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Import timeout')), 10000)
+        );
+        
+        const supabaseModule = await Promise.race([importPromise, timeoutPromise]) as typeof import('@/lib/supabase');
+        clientService = supabaseModule.clientService;
+        communicationService = supabaseModule.communicationService;
+        
+        console.log('Supabase services imported successfully');
+      } catch (importError) {
+        logError('Import', importError);
+        throw new Error('Failed to load required services. Please refresh and try again.');
+      }
+
+      // Attempt client creation with retry logic
+      let client = null;
+      let retryCount = 0;
+      const maxRetries = 3;
+      
+      while (!client && retryCount < maxRetries) {
+        try {
+          console.log(`Attempting client creation (attempt ${retryCount + 1}/${maxRetries})`);
+          client = await clientService.createFromContactForm(values);
+          
+          if (client) {
+            console.log('Client created successfully:', client.id);
+            break;
+          } else {
+            throw new Error('Client creation returned null');
+          }
+        } catch (clientError) {
+          retryCount++;
+          logError(`ClientCreation_Attempt${retryCount}`, clientError);
+          
+          if (retryCount >= maxRetries) {
+            // Try fallback method - direct Supabase call
+            try {
+              console.log('Attempting fallback client creation...');
+              const { supabase } = await import('@/lib/supabase');
+              
+              const { data: fallbackClient, error: fallbackError } = await supabase
+                .from('clients')
+                .insert({
+                  first_name: values.firstName,
+                  last_name: values.lastName,
+                  suffix: values.suffix === 'none' ? null : values.suffix,
+                  email: values.email,
+                  phone: values.phone,
+                  contact_method: values.contactMethod,
+                  insurance_type: values.insuranceType,
+                  preferred_date: values.preferredDate || null,
+                  preferred_time: values.preferredTime || null,
+                  additional_info: values.additionalInfo || null,
+                  source: 'Website Contact Form (Fallback)'
+                })
+                .select()
+                .single();
+              
+              if (fallbackError) {
+                throw fallbackError;
+              }
+              
+              client = fallbackClient;
+              console.log('Fallback client creation successful:', client.id);
+              break;
+            } catch (fallbackError) {
+              logError('FallbackClientCreation', fallbackError);
+              throw new Error('Unable to save your information. Please try again or contact us directly.');
+            }
+          } else {
+            // Wait before retry
+            await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+          }
+        }
+      }
+
+      if (!client) {
+        throw new Error('Failed to create client record after all attempts');
+      }
+
+      // Attempt communication logging (non-critical)
+      try {
+        console.log('Logging communication...');
+        await communicationService.log({
+          client_id: client.id,
+          communication_type: 'email',
+          direction: 'inbound',
+          subject: `New Contact Form Submission - ${values.insuranceType}`,
+          content: `Contact form submission from ${values.firstName} ${values.lastName}. Interest: ${values.insuranceType}. Additional info: ${values.additionalInfo || 'None provided'}`,
+          status: 'completed'
+        });
+        console.log('Communication logged successfully');
+      } catch (logError) {
+        // Log the error but don't fail the submission
+        console.warn('Communication logging failed (non-critical):', logError);
+      }
+
+      // Success!
+      console.log('Form submission completed successfully');
       setSubmitStatus('success');
       addToast({
         type: 'success',
@@ -99,13 +207,26 @@ export default function ContactForm() {
       form.reset();
       
     } catch (error) {
-      console.error('Contact form submission error:', error);
+      logError('General', error);
       setSubmitStatus('error');
+      
+      // Provide more specific error messages
+      let errorMessage = 'There was an error sending your message. Please try again or call us directly.';
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      
+      if (errorMsg.includes('configuration')) {
+        errorMessage = 'Service temporarily unavailable. Please try again in a few minutes or call us directly.';
+      } else if (errorMsg.includes('timeout')) {
+        errorMessage = 'Request timed out. Please check your connection and try again.';
+      } else if (errorMsg.includes('network') || errorMsg.includes('Network')) {
+        errorMessage = 'Network error. Please check your internet connection and try again.';
+      }
+      
       addToast({
         type: 'error',
         title: 'Message Failed to Send',
-        description: 'There was an error sending your message. Please try again or call us directly.',
-        duration: 8000
+        description: errorMessage,
+        duration: 10000
       });
     } finally {
       setIsSubmitting(false);
