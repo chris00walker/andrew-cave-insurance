@@ -23,17 +23,23 @@ interface ClientDecision {
 }
 
 export function RecommendationsNotesSection({ formData, updateFormData }: RecommendationsNotesSectionProps) {
-  const recommendations = formData.recommendations?.items || [
+  const defaultRecommendations: Recommendation[] = [
     { priority: "", need: "", advisorRecommendation: "" },
     { priority: "", need: "", advisorRecommendation: "" },
     { priority: "", need: "", advisorRecommendation: "" }
   ];
 
-  const clientDecisions = formData.clientDecisions?.decisions || [
+  const defaultClientDecisions: ClientDecision[] = [
     { optionSelected: "", reasonForChoice: "" },
     { optionSelected: "", reasonForChoice: "" },
     { optionSelected: "", reasonForChoice: "" }
   ];
+
+  const existingRecommendations = formData.recommendations?.items as Recommendation[] | undefined;
+  const recommendations: Recommendation[] = existingRecommendations ?? defaultRecommendations;
+
+  const existingClientDecisions = formData.clientDecisions?.decisions as ClientDecision[] | undefined;
+  const clientDecisions: ClientDecision[] = existingClientDecisions ?? defaultClientDecisions;
 
   const updateRecommendation = (index: number, field: keyof Recommendation, value: string) => {
     const updatedRecommendations = [...recommendations];
@@ -54,7 +60,7 @@ export function RecommendationsNotesSection({ formData, updateFormData }: Recomm
 
   const removeRecommendation = (index: number) => {
     if (recommendations.length > 1) {
-      const updatedRecommendations = recommendations.filter((_, i) => i !== index);
+      const updatedRecommendations = recommendations.filter((recommendation, i) => i !== index);
       updateFormData('recommendations', { 
         ...formData.recommendations, 
         items: updatedRecommendations 
@@ -81,7 +87,7 @@ export function RecommendationsNotesSection({ formData, updateFormData }: Recomm
 
   const removeClientDecision = (index: number) => {
     if (clientDecisions.length > 1) {
-      const updatedDecisions = clientDecisions.filter((_, i) => i !== index);
+      const updatedDecisions = clientDecisions.filter((decision, i) => i !== index);
       updateFormData('clientDecisions', { 
         ...formData.clientDecisions, 
         decisions: updatedDecisions 

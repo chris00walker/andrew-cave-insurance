@@ -15,11 +15,14 @@ interface IncomeSource {
 }
 
 export function OtherIncomeSection({ formData, updateFormData }: OtherIncomeSectionProps) {
-  const incomeSources = formData.otherIncome?.sources || [
+  const defaultIncomeSources: IncomeSource[] = [
     { monthlyAmount: "", activity: "" },
     { monthlyAmount: "", activity: "" },
     { monthlyAmount: "", activity: "" }
   ];
+
+  const existingIncomeSources = formData.otherIncome?.sources as IncomeSource[] | undefined;
+  const incomeSources: IncomeSource[] = existingIncomeSources ?? defaultIncomeSources;
 
   const updateIncomeSource = (index: number, field: keyof IncomeSource, value: string) => {
     const updatedSources = [...incomeSources];
@@ -40,7 +43,7 @@ export function OtherIncomeSection({ formData, updateFormData }: OtherIncomeSect
 
   const removeIncomeSource = (index: number) => {
     if (incomeSources.length > 1) {
-      const updatedSources = incomeSources.filter((_, i) => i !== index);
+      const updatedSources = incomeSources.filter((source, i) => i !== index);
       updateFormData('otherIncome', { 
         ...formData.otherIncome, 
         sources: updatedSources 

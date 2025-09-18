@@ -18,11 +18,14 @@ interface InsurancePolicy {
 }
 
 export function ExistingInsuranceSection({ formData, updateFormData }: ExistingInsuranceSectionProps) {
-  const policies = formData.existingInsurance?.policies || [
+  const defaultPolicies: InsurancePolicy[] = [
     { company: "", typeOfPlan: "", sumAssured: "", premium: "", mode: "" },
     { company: "", typeOfPlan: "", sumAssured: "", premium: "", mode: "" },
     { company: "", typeOfPlan: "", sumAssured: "", premium: "", mode: "" }
   ];
+
+  const existingPolicies = formData.existingInsurance?.policies as InsurancePolicy[] | undefined;
+  const policies: InsurancePolicy[] = existingPolicies ?? defaultPolicies;
 
   const updatePolicy = (index: number, field: keyof InsurancePolicy, value: string) => {
     const updatedPolicies = [...policies];
@@ -43,7 +46,7 @@ export function ExistingInsuranceSection({ formData, updateFormData }: ExistingI
 
   const removePolicy = (index: number) => {
     if (policies.length > 1) {
-      const updatedPolicies = policies.filter((_, i) => i !== index);
+      const updatedPolicies = policies.filter((policy, i) => i !== index);
       updateFormData('existingInsurance', { 
         ...formData.existingInsurance, 
         policies: updatedPolicies 

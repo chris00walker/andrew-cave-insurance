@@ -23,16 +23,22 @@ interface MedicalCondition {
 }
 
 export function NeedsAnalysisSection({ formData, updateFormData }: NeedsAnalysisSectionProps) {
-  const futureNeeds = formData.futureNeeds?.needs || [
+  const defaultFutureNeeds: FutureNeed[] = [
     { need: "", description: "", value: "", timeframe: "" },
     { need: "", description: "", value: "", timeframe: "" },
     { need: "", description: "", value: "", timeframe: "" }
   ];
 
-  const medicalConditions = formData.medicalConditions?.conditions || [
+  const defaultMedicalConditions: MedicalCondition[] = [
     { condition: "", treatment: "" },
     { condition: "", treatment: "" }
   ];
+
+  const existingFutureNeeds = formData.futureNeeds?.needs as FutureNeed[] | undefined;
+  const futureNeeds: FutureNeed[] = existingFutureNeeds ?? defaultFutureNeeds;
+
+  const existingMedicalConditions = formData.medicalConditions?.conditions as MedicalCondition[] | undefined;
+  const medicalConditions: MedicalCondition[] = existingMedicalConditions ?? defaultMedicalConditions;
 
   const updateNeed = (index: number, field: keyof FutureNeed, value: string) => {
     const updatedNeeds = [...futureNeeds];
@@ -53,7 +59,7 @@ export function NeedsAnalysisSection({ formData, updateFormData }: NeedsAnalysis
 
   const removeFutureNeed = (index: number) => {
     if (futureNeeds.length > 1) {
-      const updatedNeeds = futureNeeds.filter((_, i) => i !== index);
+      const updatedNeeds = futureNeeds.filter((needItem, i) => i !== index);
       updateFormData('futureNeeds', { 
         ...formData.futureNeeds, 
         needs: updatedNeeds 
@@ -80,7 +86,7 @@ export function NeedsAnalysisSection({ formData, updateFormData }: NeedsAnalysis
 
   const removeMedicalCondition = (index: number) => {
     if (medicalConditions.length > 1) {
-      const updatedConditions = medicalConditions.filter((_, i) => i !== index);
+      const updatedConditions = medicalConditions.filter((conditionItem, i) => i !== index);
       updateFormData('medicalConditions', { 
         ...formData.medicalConditions, 
         conditions: updatedConditions 
