@@ -12,7 +12,7 @@ import { AssetsLiabilitiesSection } from './components/form-sections/assets-liab
 import { NeedsAnalysisSection } from './components/form-sections/needs-analysis';
 import { RecommendationsNotesSection } from './components/form-sections/recommendations-notes';
 import { AcknowledgementSection } from './components/form-sections/acknowledgement';
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import { Toaster } from "./components/ui/sonner";
 
 export default function App() {
