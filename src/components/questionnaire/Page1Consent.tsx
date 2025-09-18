@@ -1,11 +1,12 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Shield, FileText, AlertCircle } from "lucide-react";
+import { SmartSignature } from "@/components/ui/smart-signature";
+import { FileText } from "lucide-react";
 
 export default function Page1Consent() {
   const { register, watch, setValue, formState: { errors } } = useFormContext();
@@ -16,26 +17,6 @@ export default function Page1Consent() {
 
   return (
     <div className="space-y-6">
-      {/* Guardian Group Header */}
-      <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Shield className="h-8 w-8 text-blue-600" />
-              <div>
-                <CardTitle className="text-blue-900">Guardian Life of the Caribbean Ltd.</CardTitle>
-                <p className="text-sm text-blue-700 mt-1">
-                  Enfield House, Upper Collymore Rock, St. Michael, Barbados<br />
-                  📞 +1 (246) 430-4675 | 🌐 www.myguardiangroup.com
-                </p>
-              </div>
-            </div>
-            <Badge variant="outline" className="text-lg px-4 py-2">
-              Version 2.0
-            </Badge>
-          </div>
-        </CardHeader>
-      </Card>
 
       {/* Main Form Card */}
       <Card className="shadow-md">
@@ -191,9 +172,16 @@ export default function Page1Consent() {
               <CardContent className="pt-4">
                 <div className="space-y-3">
                   <h4 className="font-semibold text-gray-700">Signature of Client (on behalf of all persons to be insured)</h4>
-                  <div className="border-b border-gray-300 pb-1 mb-2">
-                    <span className="text-xs text-gray-500">Digital signature will be captured</span>
-                  </div>
+                  <SmartSignature
+                    id="clientSignature"
+                    name="clientSignature"
+                    value={watch("clientSignature") || ""}
+                    onChange={(value) => setValue("clientSignature", value)}
+                    onBlur={() => {}}
+                    placeholder="Digital Signature"
+                    required={true}
+                    error={errors.clientSignature?.message as string}
+                  />
                   <div>
                     <Label className="text-sm text-gray-600">Date:</Label>
                     <Input 
@@ -211,9 +199,15 @@ export default function Page1Consent() {
               <CardContent className="pt-4">
                 <div className="space-y-3">
                   <h4 className="font-semibold text-gray-700">Signature of Advisor</h4>
-                  <div className="border-b border-gray-300 pb-1 mb-2">
-                    <span className="text-xs text-gray-500">Andrew Cave</span>
-                  </div>
+                  <SmartSignature
+                    id="advisorSignature"
+                    name="advisorSignature"
+                    value={"Andrew Cave"}
+                    onChange={(value) => setValue("advisorSignature", value)}
+                    placeholder="Advisor Digital Signature"
+                    readOnly={true}
+                    defaultValue="Andrew Cave"
+                  />
                   <div>
                     <Label className="text-sm text-gray-600">Date:</Label>
                     <Input 

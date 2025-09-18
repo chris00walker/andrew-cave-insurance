@@ -18,8 +18,6 @@ import Page4Insurance from "./Page4Insurance";
 import Page5Needs from "./Page5Needs";
 import Page6Review from "./Page6Review";
 
-// Import Figma form header
-import { FormHeader } from "../form-header";
 
 // Comprehensive form schema
 const formSchema = z.object({
@@ -29,7 +27,9 @@ const formSchema = z.object({
   agentNumber: z.string().optional(),
   discloseInfo: z.boolean(),
   specificProduct: z.boolean().optional(),
+  clientSignature: z.string().min(2, "Client signature is required"),
   clientSignatureDate: z.string(),
+  advisorSignature: z.string().optional(),
   advisorSignatureDate: z.string(),
   
   // Page 2 - Personal Information
@@ -145,6 +145,11 @@ export default function FactFindForm({ onComplete, initialData }: FactFindFormPr
   }, [initialData, methods, addToast]);
 
   const validateCurrentPage = async () => {
+    // DEVELOPMENT MODE: Disable validation for easy navigation
+    // TODO: Re-enable validation for production
+    return true;
+    
+    /* ORIGINAL VALIDATION CODE - COMMENTED OUT FOR DEVELOPMENT
     let fieldsToValidate: (keyof FormValues)[] = [];
     
     switch (currentPage) {
@@ -182,6 +187,7 @@ export default function FactFindForm({ onComplete, initialData }: FactFindFormPr
     }
     
     return result;
+    */
   };
 
   const handleNext = async () => {
@@ -209,7 +215,41 @@ export default function FactFindForm({ onComplete, initialData }: FactFindFormPr
     });
   };
 
+  const handleLoadDraft = () => {
+    const savedData = localStorage.getItem('guardianInsuranceForm');
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        methods.reset(parsedData);
+        addToast({
+          type: 'success',
+          title: 'Draft Loaded',
+          description: 'Your previous progress has been restored.',
+        });
+      } catch (error) {
+        console.error('Error loading saved form data:', error);
+        addToast({
+          type: 'error',
+          title: 'Load Failed',
+          description: 'Could not load your saved draft.',
+        });
+      }
+    } else {
+      addToast({
+        type: 'info',
+        title: 'No Draft Found',
+        description: 'No saved draft was found.',
+      });
+    }
+  };
+
   const onSubmit = async (data: FormValues) => {
+    // Only allow submission from the final page
+    if (currentPage !== totalPages) {
+      console.warn('Form submission attempted from page', currentPage, 'but should only submit from page', totalPages);
+      return;
+    }
+    
     setIsSubmitting(true);
     try {
       console.log('Submitting form data:', data);
@@ -279,7 +319,6 @@ export default function FactFindForm({ onComplete, initialData }: FactFindFormPr
   return (
     <FormProvider {...methods}>
       <div className="min-h-screen bg-gray-50">
-        <FormHeader />
         
         <div className="max-w-6xl mx-auto px-4 py-8">
           {/* Progress Section */}
@@ -296,7 +335,18 @@ export default function FactFindForm({ onComplete, initialData }: FactFindFormPr
           </div>
 
           {/* Form Content */}
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form 
+            onSubmit={handleSubmit(onSubmit)}
+            onKeyDown={(e) => {
+              // Prevent Enter key from submitting form unless on submit button
+              const target = e.target as HTMLElement;
+              if (e.key === 'Enter' && 
+                  (target as HTMLInputElement).type !== 'submit' && 
+                  target.tagName !== 'BUTTON') {
+                e.preventDefault();
+              }
+            }}
+          >
             <div className="mb-8">
               {renderCurrentPage()}
             </div>
