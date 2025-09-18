@@ -3,6 +3,8 @@ import { Playfair_Display, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from '@/components/ui/toast-provider';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 // Trust-Building Authority Font (Serif)
 const playfairDisplay = Playfair_Display({
@@ -37,7 +39,15 @@ export default function RootLayout({
       >
         <TooltipProvider>
           <ToastProvider>
-            {children}
+            <div className="flex min-h-screen flex-col bg-neutral-white">
+              <header>
+                <Navbar />
+              </header>
+              <main className="flex-1">
+                {children}
+              </main>
+              <Footer />
+            </div>
           </ToastProvider>
         </TooltipProvider>
       </body>

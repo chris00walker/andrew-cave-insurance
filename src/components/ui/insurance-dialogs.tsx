@@ -1,10 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import {
   Dialog,
   DialogClose,
@@ -19,130 +19,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar, Phone, Mail, FileText, Shield, Users, Building } from 'lucide-react';
+import { Calendar, FileText, Shield } from 'lucide-react';
 
 // Quick Quote Dialog
 export function QuickQuoteDialog() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    insuranceType: '',
-    message: ''
-  });
-
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-brand to-brand-light">
-          <FileText className="w-4 h-4 mr-2" />
-          Get Quick Quote
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle className="flex items-center">
-            <Shield className="w-5 h-5 mr-2 text-brand" />
-            Quick Insurance Quote
-          </DialogTitle>
-          <DialogDescription>
-            Get a personalized insurance quote in minutes. Our expert team will review your needs and provide competitive rates.
-          </DialogDescription>
-        </DialogHeader>
-        
-        <form className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="quote-name">Full Name</Label>
-              <Input
-                id="quote-name"
-                value={formData.name}
-                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                placeholder="Enter your full name"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="quote-email">Email</Label>
-              <Input
-                id="quote-email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                placeholder="your@email.com"
-                required
-              />
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="quote-phone">Phone Number</Label>
-              <Input
-                id="quote-phone"
-                value={formData.phone}
-                onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                placeholder="+1 (246) XXX-XXXX"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="quote-type">Insurance Type</Label>
-              <Select value={formData.insuranceType} onValueChange={(value) => setFormData(prev => ({ ...prev, insuranceType: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select insurance type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="life">Life Insurance</SelectItem>
-                  <SelectItem value="health">Health Insurance</SelectItem>
-                  <SelectItem value="auto">Auto Insurance</SelectItem>
-                  <SelectItem value="home">Home Insurance</SelectItem>
-                  <SelectItem value="business">Business Insurance</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="quote-message">Additional Information</Label>
-            <Textarea
-              id="quote-message"
-              value={formData.message}
-              onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
-              placeholder="Tell us about your specific insurance needs..."
-              rows={3}
-            />
-          </div>
-          
-          <Separator />
-          
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="secondary">
-              <Shield className="w-3 h-3 mr-1" />
-              Licensed Broker
-            </Badge>
-            <Badge variant="secondary">
-              <Users className="w-3 h-3 mr-1" />
-              Local Expert
-            </Badge>
-            <Badge variant="secondary">
-              <Building className="w-3 h-3 mr-1" />
-              15+ Years Experience
-            </Badge>
-          </div>
-        </form>
-        
-        <DialogFooter className="flex-col sm:flex-row gap-2">
-          <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DialogClose>
-          <Button type="submit" className="bg-gradient-to-r from-brand to-brand-light">
-            <Mail className="w-4 h-4 mr-2" />
-            Send Quote Request
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <Button asChild className="bg-gradient-to-r from-brand to-brand-light">
+      <Link href="/questionnaire">
+        <FileText className="w-4 h-4 mr-2" />
+        Get Quote
+      </Link>
+    </Button>
   );
 }
 

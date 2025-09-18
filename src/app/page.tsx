@@ -1,11 +1,9 @@
-import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import BenefitsGrid from '@/components/BenefitsGrid';
 import ServicesSection from '@/components/ServicesSection';
 import AboutSection from '@/components/AboutSection';
 import Testimonials from '@/components/Testimonials';
 import ContactForm from '@/components/ContactForm';
-import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
@@ -33,9 +31,6 @@ export default function Home() {
         </a>
       </div>
       
-      <header>
-        <Navbar />
-      </header>
       <main id="main-content">
         <Hero />
         <BenefitsGrid />
@@ -44,7 +39,6 @@ export default function Home() {
         <Testimonials />
         <ContactForm />
       </main>
-      <Footer />
     </>
   );
 }

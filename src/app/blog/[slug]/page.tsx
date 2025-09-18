@@ -1,6 +1,4 @@
 import { getPostBySlug, getAllPosts } from '@/lib/posts';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
-import { ArrowLeft, Calendar, Clock, User, Share2, BookOpen, Phone, Mail } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Share2, BookOpen, Phone, Mail } from 'lucide-react';
 
 export async function generateStaticParams() {
   return getAllPosts().map(p => ({ slug: p.slug }));
@@ -19,7 +17,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const { data, content } = await getPostBySlug(resolvedParams.slug);
   return (
     <>
-      <Navbar />
       <main className="min-h-screen bg-white pt-20">
         <div className="max-w-4xl mx-auto px-6 py-16">
           {/* Breadcrumb Navigation */}
@@ -208,7 +205,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </Card>
         </div>
       </main>
-      <Footer />
     </>
   );
 }

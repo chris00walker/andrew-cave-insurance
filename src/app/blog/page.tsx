@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { getAllPosts } from '@/lib/posts';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import { getImagePath } from '@/lib/image-path';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -42,7 +40,6 @@ export default async function BlogPage() {
   const posts = getAllPosts();
   return (
     <>
-      <Navbar />
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-brand to-brand-light pt-20 pb-16">
         <div className="max-w-6xl mx-auto px-6 text-center">
@@ -237,7 +234,6 @@ export default async function BlogPage() {
           </Card>
         </div>
       </main>
-      <Footer />
     </>
   );
 }
