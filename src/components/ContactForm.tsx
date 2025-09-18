@@ -69,38 +69,42 @@ export default function ContactForm() {
     setSubmitStatus('idle');
     
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
+      // Import Supabase client dynamically to avoid SSR issues
+      const { clientService, communicationService } = await import('@/lib/supabase');
+      
+      // Save to Supabase database directly
+      const client = await clientService.createFromContactForm(values);
+      
+      if (!client) {
+        throw new Error('Failed to save client information');
+      }
+
+      // Log the initial contact
+      await communicationService.log({
+        client_id: client.id,
+        communication_type: 'email',
+        direction: 'inbound',
+        subject: `New Contact Form Submission - ${values.insuranceType}`,
+        content: `Contact form submission from ${values.firstName} ${values.lastName}. Interest: ${values.insuranceType}. Additional info: ${values.additionalInfo || 'None provided'}`,
+        status: 'completed'
       });
 
-      if (response.ok) {
-        setSubmitStatus('success');
-        addToast({
-          type: 'success',
-          title: 'Message Sent Successfully!',
-          description: 'Thank you for contacting us. Andrew will get back to you within 24 hours.',
-          duration: 6000
-        });
-        form.reset();
-      } else {
-        setSubmitStatus('error');
-        addToast({
-          type: 'error',
-          title: 'Message Failed to Send',
-          description: 'There was an error sending your message. Please try again or call us directly.',
-          duration: 8000
-        });
-      }
-    } catch {
+      setSubmitStatus('success');
+      addToast({
+        type: 'success',
+        title: 'Message Sent Successfully!',
+        description: 'Thank you for contacting us. Andrew will get back to you within 24 hours.',
+        duration: 6000
+      });
+      form.reset();
+      
+    } catch (error) {
+      console.error('Contact form submission error:', error);
       setSubmitStatus('error');
       addToast({
         type: 'error',
-        title: 'Connection Error',
-        description: 'Unable to send message. Please check your connection and try again.',
+        title: 'Message Failed to Send',
+        description: 'There was an error sending your message. Please try again or call us directly.',
         duration: 8000
       });
     } finally {
