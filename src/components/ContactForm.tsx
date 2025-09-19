@@ -165,7 +165,14 @@ export default function ContactForm() {
               break;
             } catch (fallbackError) {
               logError('FallbackClientCreation', fallbackError);
-              throw new Error('Unable to save your information. Please try again or contact us directly.');
+              
+              // Handle specific error types
+              const errorMsg = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
+              if (errorMsg.includes('duplicate key') || errorMsg.includes('unique constraint') || errorMsg.includes('already exists')) {
+                throw new Error('duplicate email');
+              } else {
+                throw new Error('Unable to save your information. Please try again or contact us directly.');
+              }
             }
           } else {
             // Wait before retry
@@ -217,7 +224,9 @@ export default function ContactForm() {
       let errorMessage = 'There was an error sending your message. Please try again or call us directly.';
       const errorMsg = error instanceof Error ? error.message : String(error);
       
-      if (errorMsg.includes('configuration')) {
+      if (errorMsg.includes('duplicate key') || errorMsg.includes('unique constraint') || errorMsg.includes('already exists') || errorMsg.includes('duplicate email')) {
+        errorMessage = 'It looks like you\'ve already submitted a request with this email address. We\'ll be in touch soon! If you need to update your information, please call us directly.';
+      } else if (errorMsg.includes('configuration')) {
         errorMessage = 'Service temporarily unavailable. Please try again in a few minutes or call us directly.';
       } else if (errorMsg.includes('timeout')) {
         errorMessage = 'Request timed out. Please check your connection and try again.';
