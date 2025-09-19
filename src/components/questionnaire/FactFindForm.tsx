@@ -282,10 +282,37 @@ export default function FactFindForm({ onComplete, initialData }: FactFindFormPr
       }
     } catch (error) {
       console.error('Submission error:', error);
+      
+      // Following Supabase best practices: use error.code for specific error handling
+      let errorMessage = 'There was an error submitting your application. Please try again or contact us directly.';
+      let errorTitle = 'Submission Failed';
+      
+      // Check for Supabase/PostgreSQL error codes first
+      if (error && typeof error === 'object' && 'code' in error) {
+        const errorCode = (error as any).code;
+        if (errorCode === '23505' || errorCode === 23505) {
+          errorTitle = 'Application Already Submitted';
+          errorMessage = 'It looks like you\'ve already submitted an application with this email address. We\'ll be in touch soon! If you need to update your information, please contact us directly.';
+        }
+      } else {
+        // Check for custom error messages from our error handling
+        const errorMsg = error instanceof Error ? error.message : String(error);
+        if (errorMsg.includes('duplicate email')) {
+          errorTitle = 'Application Already Submitted';
+          errorMessage = 'It looks like you\'ve already submitted an application with this email address. We\'ll be in touch soon! If you need to update your information, please contact us directly.';
+        } else if (errorMsg.includes('configuration')) {
+          errorMessage = 'Service temporarily unavailable. Please try again in a few minutes or contact us directly.';
+        } else if (errorMsg.includes('timeout')) {
+          errorMessage = 'Request timed out. Please check your connection and try again.';
+        } else if (errorMsg.includes('network') || errorMsg.includes('Network')) {
+          errorMessage = 'Network error. Please check your internet connection and try again.';
+        }
+      }
+      
       addToast({
         type: 'error',
-        title: 'Submission Failed',
-        description: 'There was an error submitting your application. Please try again or contact us directly.',
+        title: errorTitle,
+        description: errorMessage,
       });
     } finally {
       setIsSubmitting(false);

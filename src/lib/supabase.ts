@@ -288,13 +288,17 @@ export const questionnaireService = {
 
       if (error) {
         console.error('Error creating questionnaire:', error)
-        return { client, questionnaire: null }
+        // Following Supabase best practices: throw error instead of returning null
+        // This allows proper error handling with error.code detection
+        throw error
       }
 
       return { client, questionnaire }
     } catch (error) {
       console.error('Error submitting questionnaire:', error)
-      return { client: null, questionnaire: null }
+      // Following Supabase best practices: re-throw error for proper handling
+      // This allows the UI layer to detect specific error codes like 23505
+      throw error
     }
   },
 
