@@ -167,9 +167,13 @@ export default function ContactForm() {
               logError('FallbackClientCreation', fallbackError);
               
               // Handle Supabase error object structure properly
+              console.log('Fallback error object:', fallbackError);
+              console.log('Error code:', (fallbackError as any)?.code, 'Type:', typeof (fallbackError as any)?.code);
+              
               if (fallbackError && typeof fallbackError === 'object' && 'code' in fallbackError) {
                 // Check for unique constraint violation (PostgreSQL error code 23505)
-                if (fallbackError.code === '23505' || fallbackError.code === 23505) {
+                const errorCode = (fallbackError as any).code;
+                if (errorCode === '23505' || errorCode === 23505) {
                   throw new Error('duplicate email');
                 }
               }
@@ -226,9 +230,14 @@ export default function ContactForm() {
       let errorMessage = 'There was an error sending your message. Please try again or call us directly.';
       const errorMsg = error instanceof Error ? error.message : String(error);
       
+      // Debug logging to understand error structure
+      console.log('Main error object:', error);
+      console.log('Error code:', (error as any)?.code, 'Type:', typeof (error as any)?.code);
+      
       // Check for Supabase/PostgreSQL error codes first
       if (error && typeof error === 'object' && 'code' in error) {
-        if (error.code === '23505' || error.code === 23505) {
+        const errorCode = (error as any).code;
+        if (errorCode === '23505' || errorCode === 23505) {
           errorMessage = 'It looks like you\'ve already submitted a request with this email address. We\'ll be in touch soon! If you need to update your information, please call us directly.';
         }
       } else if (errorMsg.includes('duplicate email')) {
