@@ -195,6 +195,9 @@ export default function ContactForm() {
         console.warn('Communication logging failed (non-critical):', logError);
       }
 
+      // Notification will be automatically triggered by database webhook
+      console.log('Client created successfully. Webhook notification will be triggered automatically.');
+
       // Success!
       console.log('Form submission completed successfully');
       setSubmitStatus('success');
