@@ -110,7 +110,7 @@ export const clientService = {
 
     if (error) {
       console.error('Error creating client:', error)
-      return null
+      throw error
     }
 
     return data
