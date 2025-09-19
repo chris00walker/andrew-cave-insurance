@@ -166,13 +166,15 @@ export default function ContactForm() {
             } catch (fallbackError) {
               logError('FallbackClientCreation', fallbackError);
               
-              // Handle specific error types
-              const errorMsg = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
-              if (errorMsg.includes('duplicate key') || errorMsg.includes('unique constraint') || errorMsg.includes('already exists')) {
-                throw new Error('duplicate email');
-              } else {
-                throw new Error('Unable to save your information. Please try again or contact us directly.');
+              // Handle Supabase error object structure properly
+              if (fallbackError && typeof fallbackError === 'object' && 'code' in fallbackError) {
+                // Check for unique constraint violation (PostgreSQL error code 23505)
+                if (fallbackError.code === '23505' || fallbackError.code === 23505) {
+                  throw new Error('duplicate email');
+                }
               }
+              
+              throw new Error('Unable to save your information. Please try again or contact us directly.');
             }
           } else {
             // Wait before retry
@@ -220,11 +222,16 @@ export default function ContactForm() {
       logError('General', error);
       setSubmitStatus('error');
       
-      // Provide more specific error messages
+      // Provide more specific error messages based on Supabase error structure
       let errorMessage = 'There was an error sending your message. Please try again or call us directly.';
       const errorMsg = error instanceof Error ? error.message : String(error);
       
-      if (errorMsg.includes('duplicate key') || errorMsg.includes('unique constraint') || errorMsg.includes('already exists') || errorMsg.includes('duplicate email')) {
+      // Check for Supabase/PostgreSQL error codes first
+      if (error && typeof error === 'object' && 'code' in error) {
+        if (error.code === '23505' || error.code === 23505) {
+          errorMessage = 'It looks like you\'ve already submitted a request with this email address. We\'ll be in touch soon! If you need to update your information, please call us directly.';
+        }
+      } else if (errorMsg.includes('duplicate email')) {
         errorMessage = 'It looks like you\'ve already submitted a request with this email address. We\'ll be in touch soon! If you need to update your information, please call us directly.';
       } else if (errorMsg.includes('configuration')) {
         errorMessage = 'Service temporarily unavailable. Please try again in a few minutes or call us directly.';
